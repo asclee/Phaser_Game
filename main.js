@@ -2,6 +2,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game', { preload: preload, 
 
 function preload() {
 
+    game.load.image('mario', 'assets/mario.jpg');
 }
 
 function create() {
