@@ -1,15 +1,8 @@
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game');
 
-function preload() {
+game.state.add('boot', bootState);
+game.state.add('load', loadState);
+game.state.add('menu', menuState);
+game.state.add('play', playState);
 
-    game.load.image('mario', 'assets/mario.jpg');
-}
-
-function create() {
-
-}
-
-function update() {
-    
-            
-}
+game.state.start('boot')
