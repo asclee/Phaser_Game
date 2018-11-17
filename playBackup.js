@@ -30,24 +30,39 @@ var playState = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // A simple background
-        game.stage.backgroundColor = "#a9f0ff";
-        
-        
-        
-        // The player and its settings
-        player = game.add.sprite(232, game.world.height - 150, 'dude');
-        player.anchor.x = 0.5;
-        player.anchor.y = 0.5;
-        game.physics.arcade.enable(player); //enable physics on the player
-        
-        //  Player physics properties. Give the little guy a slight bounce.
-        player.body.bounce.y = 0.2;
-        player.body.gravity.y = 300;
-        player.body.collideWorldBounds = true;
+        game.add.sprite(0, 0, 'sky');
 
-        //  Our two animations, walking left and right.
-        player.animations.add('left', [0, 1, 2, 3], 10, true);
-        player.animations.add('right', [5, 6, 7, 8], 10, true);
+        //  the platforms group contains the ground and the 2 ledges
+        platforms = game.add.group();
+
+        //  We will enable physics for any object that is created in this group
+        platforms.enableBody = true;
+
+        // Here we create the ground.
+        var ground = platforms.create(0, game.world.height - 64, 'ground');
+
+        //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+        ground.scale.setTo(2, 2);
+
+        //  This stops it from falling away when you jump on it
+        ground.body.immovable = true;
+
+        //  Ledges
+        var ledge = platforms.create(400, h1, 'ground');
+        ledge.body.immovable = true;
+
+        ledge = platforms.create(-150, h2, 'ground');
+        ledge.body.immovable = true;
+
+        ledge = platforms.create(1100, game.world.height - 64, 'ground');
+        ledge.body.immovable = true;
+        ledge.scale.setTo(1,2);
+
+        // Death Zone
+        deathZone = game.add.group();
+        deathZone.enableBody = true;
+        lava = deathZone.create(800, game.world.height - 32, 'lava');
+        lava.scale.setTo(.47,.1);
 
         // WORM HOLE
         wormHole = game.add.group();
@@ -57,6 +72,47 @@ var playState = {
 
         hole2 = wormHole.create(400, h1+30, 'pink');
         hole2.scale.setTo(1, 3.5);
+
+
+        // The player and its settings
+        player = game.add.sprite(232, game.world.height - 150, 'dude');
+        player.anchor.x = 0.5;
+        player.anchor.y = 0.5;
+
+
+
+        //  We need to enable physics on the player
+        game.physics.arcade.enable(player);
+
+        //  Player physics properties. Give the little guy a slight bounce.
+        player.body.bounce.y = 0.2;
+        player.body.gravity.y = 300;
+        player.body.collideWorldBounds = true;
+
+        //  Our two animations, walking left and right.
+        player.animations.add('left', [0, 1, 2, 3], 10, true);
+        player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+        //game.camera.fallow(player);
+
+        //  Finally some stars to collect
+        stars = game.add.group();
+
+        //  We will enable physics for any star that is created in this group
+        stars.enableBody = true;
+
+        //  Here we'll create 12 of them evenly spaced apart
+        for (var i = 0; i < 12; i++)
+        {
+            //  Create a star inside of the 'stars' group
+            var star = stars.create(i * 70, 0, 'star');
+
+            //  Let gravity do its thing
+            star.body.gravity.y = 300;
+
+            //  This just gives each star a slightly random bounce value
+            star.body.bounce.y = 0.7 + Math.random() * 0.2;
+        }
 
         //  The score
         score= 0;
