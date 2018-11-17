@@ -14,6 +14,10 @@ var lives;
 var livesText;
 var livesString;
 
+var map;
+var backgroundLayer;
+
+
 var playState = {
     /*preload: function () {
         game.load.image('sky', 'assets/sky.png');
@@ -32,7 +36,11 @@ var playState = {
         // A simple background
         game.stage.backgroundColor = "#a9f0ff";
         
+        map = game.add.tilemap('tilemap');
         
+        // map.addTilesetImage('tilesTransparent', 'tilesTransparents');
+        
+        // backgroundlayer = map.createLayer('BackgroundLayer');
         
         // The player and its settings
         player = game.add.sprite(232, game.world.height - 150, 'dude');

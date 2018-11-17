@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" source="tileArtTransparent.tsx"/>
+ <layer id="3" name="framelayer" width="10" height="10">
+  <data encoding="csv">
+254,254,254,254,254,254,254,254,254,254,
+254,0,0,0,0,0,0,0,0,254,
+254,0,0,0,0,0,0,0,0,254,
+254,0,0,0,0,0,0,0,0,254,
+254,0,0,0,0,0,0,0,0,254,
+254,0,0,0,0,0,0,0,0,254,
+254,0,0,0,0,0,0,0,0,254,
+254,0,0,0,0,0,0,0,0,254,
+254,0,0,0,0,0,0,0,0,254,
+254,254,254,254,254,254,254,254,254,254
+</data>
+ </layer>
+</map>
