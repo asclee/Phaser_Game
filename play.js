@@ -15,14 +15,14 @@ var livesText;
 var livesString;
 
 var playState = {
-    preload: function () {
+    /*preload: function () {
         game.load.image('sky', 'assets/sky.png');
         game.load.image('ground', 'assets/platform.png');
         game.load.image('star', 'assets/star.png');
         game.load.image('pink', 'assets/pink.png');
         game.load.image('lava', 'assets/lava.png');
         game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-    },
+    },*/
     
     create: function () {
         game.world.setBounds(0, 0, 1500, 600);    
