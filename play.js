@@ -1,40 +1,41 @@
 var player;
-var platforms;
-var h1 = 300;//heights of ledges
-var h2 = 350;
-var wormHole;
-var cursors;
-var deathZone;
-var stars;
-var score = 0;
-var scoreText;
-var scoreString;
+
+var map;
+var backgroundLayer;
+var groundLayer;
+var gravityLayer;
 
 var lives;
 var livesText;
 var livesString;
 
+var cursors;
+
 var playState = {
-    /*preload: function () {
-        game.load.image('sky', 'assets/sky.png');
-        game.load.image('ground', 'assets/platform.png');
-        game.load.image('star', 'assets/star.png');
-        game.load.image('pink', 'assets/pink.png');
-        game.load.image('lava', 'assets/lava.png');
-        game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-    },*/
     
     create: function () {
-        game.world.setBounds(0, 0, 1500, 600);    
+        //game.world.setBounds(0, 0, 800, 800);    
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // A simple background
         game.stage.backgroundColor = "#a9f0ff";
         
+        // add tilemap
+        map = game.add.tilemap('tilemap');
+        map.addTilesetImage('tilesTransparent', 'tileArtTransparent');
+        backgroundLayer = map.createLayer('BackgroundLayer');
+        groundLayer = map.createLayer('GroundLayer');
+        gravityLayer = map.createLayer('GravityFlipLayer');
+        map.setCollisionBetween(1, 100, true, 'GroundLayer');
+        backgroundLayer.scale.set(2);
+        groundLayer.scale.set(2);
+        gravityLayer.scale.set(2);
+        backgroundLayer.resizeWorld();
+        groundLayer.resizeWorld();
+        gravityLayer.resizeWorld();
         
-        
-        // The player and its settings
+        // Add the player and its settings
         player = game.add.sprite(232, game.world.height - 150, 'dude');
         player.anchor.x = 0.5;
         player.anchor.y = 0.5;
@@ -48,83 +49,45 @@ var playState = {
         //  Our two animations, walking left and right.
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('right', [5, 6, 7, 8], 10, true);
-
-        // WORM HOLE
-        wormHole = game.add.group();
-        wormHole.enableBody = true;
-        hole = wormHole.create(-150, h2+30, 'pink');
-        hole.scale.setTo(1, 3.5);
-
-        hole2 = wormHole.create(400, h1+30, 'pink');
-        hole2.scale.setTo(1, 3.5);
-
-        //  The score
-        score= 0;
-        scoreString = 'Score : ';
-        scoreText = game.add.text(16, 16, scoreString + score, { fontSize: '32px', fill: '#000' });
-
+        game.camera.follow(player);
+        
         //lives
         lives = 3;
         livesString = 'Lives : '
         livesText = game.add.text(300,16, livesString + lives, { fontSize: '32px', fill: '#000'});
+        
         //  Our controls.
         cursors = game.input.keyboard.createCursorKeys();
-
-        game.camera.follow(player);
     },
     
     update: function() {
         
         //  Collide the player and the stars with the platforms
-        var hitPlatform = game.physics.arcade.collide(player, platforms);
-        game.physics.arcade.collide(stars, platforms);
-
-        //  Checks if the player overlaps with any of the stars, call collectStar function
-        game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
+        var hitPlatform = game.physics.arcade.collide(player, groundLayer);
 
         //  Reset the players velocity (movement)
         player.body.velocity.x = 0;
 
-        if(game.physics.arcade.overlap(player, lava))
+        player.angle = 0;
+        player.body.gravity.y = 300;
+
+        if (cursors.left.isDown)
         {
-            if(lives<1){
-            this.gameOver(score);
-            }
-            else{ this.lifeLost(player); }
+            //  Move to the left
+            player.body.velocity.x = -150;
+            player.animations.play('left');
         }
-
-        if(game.physics.arcade.overlap(player, wormHole))
+        else if (cursors.right.isDown)
         {
-            this.flipgravity(player, wormHole);
+            //  Move to the right
+            player.body.velocity.x = 150;
+            player.animations.play('right');
         }
-        else{
-            player.angle = 0;
-            player.body.gravity.y = 300;
-
-            if (cursors.left.isDown)
-            {
-                //  Move to the left
-                player.body.velocity.x = -150;
-                player.animations.play('left');
-
-
-
-            }
-            else if (cursors.right.isDown)
-            {
-                //  Move to the right
-                player.body.velocity.x = 150;
-                player.animations.play('right');
-
-            }
-
-            else
-            {
-                //  Stand still
-                player.animations.stop();
-
-                player.frame = 4;
-            }
+        else
+        {
+            //  Stand still
+            player.animations.stop();
+            player.frame = 4;
         }
 
         //  Allow the player to jump if they are touching the ground.
@@ -133,54 +96,6 @@ var playState = {
             player.body.velocity.y = -350;
         }
     },
-    
-flipgravity: function(player, wormHole) {
-    
-    player.body.gravity.y = -300;
-    //player.body.velocity.y = -300;
-    player.angle = 180;
-    
-    if (cursors.left.isDown)
-        {
-            //  Move to the left
-            player.body.velocity.x = -150;
-
-            player.animations.play('right');
-
-        }
-        else if (cursors.right.isDown)
-        {
-            //  Move to the right
-            player.body.velocity.x = 150;
-
-            player.animations.play('left');
-        }
-
-        else
-        {
-            //  Stand still
-            player.animations.stop();
-
-            player.frame = 4;
-        }
-    
-    if (cursors.up.isDown)// && player.body.touching.down)// && hitPlatform)
-    {
-        player.body.velocity.y = 350;
-    }
-    
-}, // end of fliped gravity
-
-collectStar: function(player, star) {
-    
-    // Removes the star from the screen
-    star.kill();
-
-    //  Add and update the score
-    score += 10;
-    scoreText.text = 'Score: ' + score;
-
-},
 
 lifeLost: function(player) {
 
@@ -190,11 +105,5 @@ lifeLost: function(player) {
     livesText.text = 'Lives: ' + lives;
     
 },
-    
-gameOver: function(score) {
-
-    var gameOverText = game.add.text(600,200, 'GAME OVER', { fontSize: '48px', fill: '#999'});
-    player.kill();
-}
     
 };

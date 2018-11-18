@@ -9,8 +9,8 @@ var loadState = {
         game.load.image('pink', 'assets/pink.png');
         game.load.image('lava', 'assets/lava.png');
         game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        game.load.image('tileArtTransparent', 'assets/tileArtTransparent.png');
         game.load.tilemap('tilemap', 'assets/tileMapLevel0.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tilesTransparent', 'assets/tileArtTransparent.png');
     },
     
     create: function() {
