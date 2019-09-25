@@ -4,7 +4,7 @@ Currently unfinished.
 
 
 ## To download and run the game
-First, download all files and the assets folder in the branch titled Amber's_branch.
+First, download all files and the assets folder in the branch titled `mostUpdated`.
 In order to run the game, the user must first set up a server.
 
 One option is setting up a Python SimpleHTTPServer.
